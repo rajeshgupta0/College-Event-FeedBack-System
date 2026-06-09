@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TrendingUp, MessageSquare, Star, CalendarIcon, Filter, X, Image as ImageIcon, Music, Loader2 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import ReactWordcloud from "react-wordcloud";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import KeywordTrendWidget from "@/components/KeywordTrendWidget";
@@ -442,23 +441,30 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
+          {/* Updated Word Cloud Card - Without ReactWordcloud */}
           <Card>
             <CardHeader>
-              <CardTitle>Feedback Word Cloud</CardTitle>
-              <CardDescription>Common words from all feedback</CardDescription>
+              <CardTitle>Feedback Keywords</CardTitle>
+              <CardDescription>
+                Most common words extracted from student feedback
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px]">
+              <div className="min-h-[300px] rounded-xl border bg-muted/20 p-6 flex items-center justify-center">
                 {wordCloudData.length > 0 ? (
-                  <ReactWordcloud
-                    words={wordCloudData}
-                    options={{
-                      rotations: 2,
-                      rotationAngles: [-90, 0],
-                      fontSizes: [12, 60],
-                      colors: ["hsl(var(--primary))", "hsl(var(--secondary))", "hsl(var(--accent))"],
-                    }}
-                  />
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    {wordCloudData.map((word, index) => (
+                      <span
+                        key={index}
+                        className="rounded-full border px-3 py-2 font-medium transition-all duration-300 hover:scale-110 cursor-default"
+                        style={{
+                          fontSize: `${Math.min(14 + word.value * 1.5, 36)}px`,
+                        }}
+                      >
+                        {word.text}
+                      </span>
+                    ))}
+                  </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
                     No feedback data available

@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, TrendingDown, Minus, Tag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import ReactWordcloud from "react-wordcloud";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 interface Keyword {
@@ -93,11 +92,6 @@ export default function KeywordTrendWidget({ feedbacks }: KeywordTrendWidgetProp
     return "hsl(var(--chart-3))";
   };
 
-  const wordCloudData = keywords.map(k => ({
-    text: k.text,
-    value: k.count * 10,
-  }));
-
   const chartData = keywords.slice(0, 10).map(k => ({
     keyword: k.text.length > 15 ? k.text.substring(0, 15) + '...' : k.text,
     count: k.count,
@@ -175,21 +169,33 @@ export default function KeywordTrendWidget({ feedbacks }: KeywordTrendWidgetProp
               </ResponsiveContainer>
             </div>
 
-            {/* Word Cloud */}
+            {/* Keyword Cloud - New Version without react-wordcloud */}
             <div>
               <h4 className="text-sm font-semibold mb-4">Keyword Cloud</h4>
-              <div className="h-64 border rounded-lg p-4 bg-muted/20">
-                {wordCloudData.length > 0 && (
-                  <ReactWordcloud
-                    words={wordCloudData}
-                    options={{
-                      rotations: 2,
-                      rotationAngles: [0, 90],
-                      fontSizes: [16, 60],
-                      colors: ['hsl(var(--primary))', 'hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))'],
-                    }}
-                  />
-                )}
+              <div className="border rounded-xl p-6 bg-muted/20 min-h-[250px] flex items-center justify-center">
+                <div className="flex flex-wrap gap-3 justify-center">
+                  {keywords.map((keyword, index) => (
+                    <span
+                      key={index}
+                      className={`
+                        rounded-full px-3 py-2 font-semibold transition-all duration-300
+                        hover:scale-110 cursor-default
+                        ${
+                          keyword.sentiment === "positive"
+                            ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                            : keyword.sentiment === "negative"
+                            ? "bg-red-500/10 text-red-500 border border-red-500/20"
+                            : "bg-primary/10 text-primary border border-primary/20"
+                        }
+                      `}
+                      style={{
+                        fontSize: `${Math.min(14 + keyword.count * 2, 32)}px`,
+                      }}
+                    >
+                      {keyword.text}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
