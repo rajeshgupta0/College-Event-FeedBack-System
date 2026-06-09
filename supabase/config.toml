@@ -1,0 +1,22 @@
+project_id = "nxlvlkinnhmovrcdinnd"
+
+[functions.analyze-sentiment]
+verify_jwt = false
+
+[functions.extract-keywords]
+verify_jwt = false
+
+[functions.detect-urgent-issues]
+verify_jwt = false
+
+[functions.analyze-image]
+verify_jwt = false
+
+[functions.analyze-audio]
+verify_jwt = false
+
+[functions.recommend-events]
+verify_jwt = false
+
+[functions.generate-event-summary]
+verify_jwt = false
